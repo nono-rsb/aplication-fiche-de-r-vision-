@@ -1,0 +1,13 @@
+-- =============================================================================
+-- 0099_v2_placeholder.sql — Emplacement réservé : quiz générés par IA (V2)
+-- =============================================================================
+-- Rien n'est créé en V1. Esquisse des tables prévues :
+--
+--   ai_quizzes         (id, sheet_id → sheets, class_id, status, model, created_at)
+--   ai_quiz_questions  (id, quiz_id → ai_quizzes, question, choices jsonb, answer_index, explanation)
+--   ai_quiz_attempts   (id, quiz_id, user_id, score, answers jsonb, created_at)
+--
+-- RLS prévue : lecture si la fiche est visible (même classe, publiée),
+-- tentatives privées (user_id = auth.uid()), génération réservée à l'admin
+-- via une Edge Function.
+select 1;

@@ -62,7 +62,7 @@ reports → cible polymorphe (question | answer | sheet | deck)
 | Colonne | Type | Notes |
 |---|---|---|
 | id | uuid PK → auth.users on delete cascade | |
-| pseudo | citext unique | 3–20 caractères, `^[a-zA-Z0-9_.-]+$` |
+| pseudo | text, unique sans tenir compte de la casse (index sur `lower(pseudo)`) | 3–20 caractères, `^[a-zA-Z0-9_.-]+$` |
 | class_id | uuid → classes | |
 | role | text check in ('eleve','admin') default 'eleve' | |
 | is_blocked | bool default false | bloque toute écriture (questions, votes, contributions…) |
@@ -78,7 +78,6 @@ reports → cible polymorphe (question | answer | sheet | deck)
 | show_in_leaderboard | bool default true | |
 | reminder_time | time default '18:00' | heure de Paris |
 | notif_new_sheet, notif_answer, notif_request_published, notif_daily_reminder, notif_streak | bool default true | |
-| onboarding_done | bool default false | |
 
 #### `subjects`, `chapters`
 | Table | Colonnes |
@@ -270,10 +269,10 @@ Budget plan gratuit : ~45 000 invocations Edge Functions / mois (limite 500 000)
 ├── index.html
 ├── package.json
 ├── vite.config.ts                 # vite-plugin-pwa (stratégie injectManifest)
-├── tailwind.config.ts · postcss.config.js · tsconfig*.json
+├── tsconfig*.json                 # Tailwind v4 : configuration dans src/index.css
+├── scripts/test-db.mjs            # tests SQL/RLS dans un Postgres embarqué (PGlite)
 ├── public/
 │   ├── icons/                     # icônes PWA 192/512/maskable + apple-touch-icon
-│   ├── onboarding/                # illustrations du tutoriel iPhone / Android
 │   └── _headers                   # en-têtes Cloudflare (cache, sécurité)
 ├── src/
 │   ├── main.tsx · App.tsx · router.tsx

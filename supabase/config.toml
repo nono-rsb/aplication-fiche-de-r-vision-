@@ -1,0 +1,5 @@
+# Configuration minimale pour le CLI Supabase (supabase link / db push / functions deploy)
+project_id = "fiches-revision"
+
+[functions.delete-account]
+verify_jwt = true
