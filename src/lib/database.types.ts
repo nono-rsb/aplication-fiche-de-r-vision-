@@ -32,6 +32,7 @@ export type ProfileRow = {
   current_streak: number
   best_streak: number
   last_active_day: string | null
+  last_seen_on: string | null
   created_at: string
 }
 
@@ -47,6 +48,58 @@ export type UserSettingsRow = {
   updated_at: string
 }
 
+export type SubjectRow = {
+  id: string
+  class_id: string
+  name: string
+  color: string
+  icon: string
+  position: number
+  created_at: string
+}
+
+export type ChapterRow = {
+  id: string
+  subject_id: string
+  class_id: string
+  title: string
+  position: number
+  created_at: string
+}
+
+export type ContentStatus = 'pending' | 'published' | 'rejected'
+
+export type SheetRow = {
+  id: string
+  chapter_id: string
+  class_id: string
+  title: string
+  description: string | null
+  file_path: string
+  file_size: number
+  page_count: number | null
+  status: ContentStatus
+  author_id: string | null
+  rejection_reason: string | null
+  reviewed_by: string | null
+  reviewed_at: string | null
+  published_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type FavoriteRow = { user_id: string; sheet_id: string; created_at: string }
+export type SheetViewRow = { sheet_id: string; user_id: string; day: string }
+
+export type AdminStats = {
+  students: number
+  active_today: number
+  active_7d: number
+  active_30d: number
+  sheets: number
+  top_sheets: { id: string; title: string; views: number; readers: number }[]
+}
+
 export type Database = {
   __InternalSupabase: { PostgrestVersion: '13' }
   public: {
@@ -54,6 +107,11 @@ export type Database = {
       classes: Table<ClassRow, 'name'>
       profiles: Table<ProfileRow, 'id' | 'pseudo'>
       user_settings: Table<UserSettingsRow, 'user_id'>
+      subjects: Table<SubjectRow, 'class_id' | 'name'>
+      chapters: Table<ChapterRow, 'subject_id' | 'title'>
+      sheets: Table<SheetRow, 'chapter_id' | 'title' | 'file_path' | 'file_size'>
+      favorites: Table<FavoriteRow, 'user_id' | 'sheet_id'>
+      sheet_views: Table<SheetViewRow, 'sheet_id' | 'user_id'>
     }
     Views: { [_ in never]: never }
     Functions: {
@@ -61,6 +119,9 @@ export type Database = {
       is_pseudo_available: { Args: { p_pseudo: string }; Returns: boolean }
       regenerate_invite_code: { Args: { p_class_id: string }; Returns: string }
       paris_today: { Args: Record<string, never>; Returns: string }
+      ping: { Args: Record<string, never>; Returns: undefined }
+      record_sheet_view: { Args: { p_sheet_id: string }; Returns: undefined }
+      admin_stats: { Args: { p_class_id?: string | null }; Returns: Json }
     }
     Enums: { [_ in never]: never }
     CompositeTypes: { [_ in never]: never }

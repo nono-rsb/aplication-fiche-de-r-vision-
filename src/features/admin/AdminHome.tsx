@@ -5,12 +5,12 @@ import { Card } from '@/components/ui/Card'
 
 const sections: { to: string; label: string; icon: LucideIcon; step?: number }[] = [
   { to: '/admin/classes', label: 'Classes et codes d’invitation', icon: School },
-  { to: '#', label: 'Matières, chapitres et fiches', icon: BookOpen, step: 2 },
+  { to: '/admin/contenu', label: 'Matières, chapitres et fiches', icon: BookOpen },
   { to: '#', label: 'Flashcards', icon: Layers, step: 3 },
   { to: '#', label: 'Contrôles', icon: CalendarClock, step: 4 },
   { to: '#', label: 'Contributions à valider', icon: Inbox, step: 8 },
   { to: '#', label: 'Signalements', icon: Flag, step: 7 },
-  { to: '#', label: 'Statistiques', icon: BarChart3, step: 2 },
+  { to: '/admin/stats', label: 'Statistiques', icon: BarChart3 },
 ]
 
 export const AdminHome = () => (

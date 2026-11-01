@@ -14,7 +14,7 @@ La conception (schéma de base de données, politiques RLS, arborescence) est d�
 | Étape | Contenu | État |
 |---|---|---|
 | 1 | Projet, PWA, auth, classes, onboarding d'installation | ✅ |
-| 2 | Matières / chapitres / fiches PDF, lecteur, hors ligne, admin de base | à venir |
+| 2 | Matières / chapitres / fiches PDF, lecteur, hors ligne, admin de base | ✅ |
 | 3 | Flashcards (répétition espacée) | à venir |
 | 4 | Contrôles, compte à rebours, révision du jour | à venir |
 | 5 | Streaks, XP, classement | à venir |
@@ -48,6 +48,18 @@ npx supabase db push                               # applique supabase/migration
 ```
 
 Puis exécute `supabase/seed.sql` dans le SQL Editor (données de test).
+
+La migration `0002_sheets.sql` crée aussi le bucket Storage privé **`sheets`** (PDF uniquement, 10 Mo max). Rien à faire à la main.
+
+#### PDF de démonstration
+
+Le seed crée 5 fiches de démo, dont les PDF sont dans `supabase/seed-files/`. Pour les envoyer dans Storage :
+
+```bash
+SUPABASE_URL=https://xxxx.supabase.co SUPABASE_SERVICE_ROLE_KEY=<clé service_role> node scripts/upload-seed-files.mjs
+```
+
+(La clé `service_role` se trouve dans Project Settings → API. Utilise-la seulement dans ton terminal, jamais dans l'app ni dans Git.)
 
 Le seed crée deux classes de démonstration :
 
@@ -182,6 +194,21 @@ Chaque push sur la branche principale redéploie automatiquement. Le routage de 
 - [ ] Suppression de compte (après le déploiement de `delete-account`) : le compte disparaît de **Authentication → Users**.
 - [ ] Admin : créer une classe, copier le code ou le lien d'inscription, régénérer le code, fermer les inscriptions, voir les élèves, bloquer/débloquer un élève, le changer de classe.
 - [ ] Un élève bloqué voit un message de compte suspendu.
+
+## 6. Tester l'étape 2
+
+- [ ] Onglet **Fiches** : nouveautés, matières (avec le nombre de fiches), recherche sans accents (« revolution » trouve « Révolution »).
+- [ ] Une matière affiche ses chapitres et leurs fiches.
+- [ ] Une fiche s'ouvre dans le lecteur : zoom −/+, plein écran (sur iPhone : l'app passe en plein écran, sans barre de navigation).
+- [ ] Favoris : l'étoile ajoute ou retire la fiche de l'onglet **Favoris**.
+- [ ] **Télécharger pour hors ligne**, puis mode avion : l'onglet **Hors ligne** liste la fiche, et elle s'ouvre.
+- [ ] L'accueil affiche les nouveautés (fiches publiées depuis moins de 14 jours).
+- [ ] Admin → **Matières, chapitres et fiches** : créer une matière (icône, couleur), un chapitre, publier un PDF ; modifier, réordonner, remplacer le PDF, supprimer.
+- [ ] Un PDF de plus de 10 Mo, ou un fichier qui n'est pas un PDF, est refusé.
+- [ ] Admin → **Statistiques** : élèves actifs, fiches les plus consultées (après quelques ouvertures).
+- [ ] Un élève d'une autre classe ne voit pas ces fiches.
+
+> **Hors ligne sur iPhone** : les fiches téléchargées restent disponibles dans l'app installée sur l'écran d'accueil. Dans Safari (non installée), iOS peut effacer les données d'un site après quelques semaines sans visite.
 
 ## Limites des plans gratuits
 

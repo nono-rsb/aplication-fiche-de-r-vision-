@@ -19,7 +19,9 @@ export default defineConfig({
       registerType: 'prompt',
       injectRegister: false,
       injectManifest: {
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2,webmanifest}'],
+        globPatterns: ['**/*.{js,mjs,css,html,svg,png,woff2,webmanifest}'],
+        // Le worker pdf.js (~1,3 Mo) doit être précaché pour lire les fiches hors ligne.
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
       },
       devOptions: { enabled: false, type: 'module' },
       includeAssets: ['icons/apple-touch-icon.png', 'icons/favicon.svg'],

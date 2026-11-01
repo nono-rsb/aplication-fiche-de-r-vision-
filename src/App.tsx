@@ -15,10 +15,15 @@ import { HomePage } from '@/features/home/HomePage'
 import { ProfilePage } from '@/features/profile/ProfilePage'
 import { PrivacyPage } from '@/features/profile/PrivacyPage'
 import { ComingSoon } from '@/features/placeholders/ComingSoon'
+import { SheetsPage } from '@/features/sheets/SheetsPage'
+import { SubjectPage } from '@/features/sheets/SubjectPage'
+import { SheetPage } from '@/features/sheets/SheetPage'
 
 // L'espace admin est chargé à la demande (les élèves ne le téléchargent jamais).
 const AdminHome = lazy(() => import('@/features/admin/AdminHome').then((m) => ({ default: m.AdminHome })))
 const AdminClasses = lazy(() => import('@/features/admin/AdminClasses').then((m) => ({ default: m.AdminClasses })))
+const AdminContent = lazy(() => import('@/features/admin/AdminContent').then((m) => ({ default: m.AdminContent })))
+const AdminStats = lazy(() => import('@/features/admin/AdminStats').then((m) => ({ default: m.AdminStats })))
 
 // Au premier lancement dans le navigateur, on montre le guide d'installation.
 const OnboardingGate = () => (!isStandalone() && !onboardingSeen() ? <Navigate to="/installer" replace /> : <Outlet />)
@@ -62,13 +67,18 @@ export default function App() {
             <Route element={<OnboardingGate />}>
               <Route element={<AppShell />}>
                 <Route index element={<HomePage />} />
-                <Route path="/fiches" element={<ComingSoon title="Fiches" step={2} />} />
+                <Route path="/fiches" element={<SheetsPage />} />
+                <Route path="/fiches/matiere/:subjectId" element={<SubjectPage />} />
+                <Route path="/fiches/demandes" element={<ComingSoon title="Demandes de fiches" step={6} />} />
+                <Route path="/fiches/:sheetId" element={<SheetPage />} />
                 <Route path="/flashcards" element={<ComingSoon title="Flashcards" step={3} />} />
                 <Route path="/classement" element={<ComingSoon title="Classement" step={5} />} />
                 <Route path="/profil" element={<ProfilePage />} />
                 <Route path="/admin" element={<RequireAdmin />}>
                   <Route index element={<AdminHome />} />
                   <Route path="classes" element={<AdminClasses />} />
+                  <Route path="contenu" element={<AdminContent />} />
+                  <Route path="stats" element={<AdminStats />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Route>

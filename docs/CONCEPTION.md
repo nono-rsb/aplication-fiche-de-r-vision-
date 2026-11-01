@@ -99,7 +99,6 @@ reports → cible polymorphe (question | answer | sheet | deck)
 | rejection_reason | text | |
 | reviewed_by, reviewed_at | | |
 | published_at | timestamptz | sert à « Nouveautés » |
-| search | tsvector généré (titre + description, config `french`) | recherche plein texte |
 | created_at, updated_at | | |
 
 #### `favorites`
@@ -244,6 +243,8 @@ Légende : **C** = même classe (`class_id = my_class_id()`), **A** = admin, **M
 **Storage** — bucket privé `sheets` (limite 10 Mo, `application/pdf` uniquement) :
 - `published/{class_id}/{sheet_id}.pdf` : lecture si la fiche correspondante est publiée dans ma classe ; écriture A.
 - `contributions/{user_id}/{uuid}.pdf` : écriture par l'élève dans son propre dossier (¬B) ; lecture par lui-même et A. À l'acceptation, la fonction déplace le fichier vers `published/`.
+
+**Recherche** : le catalogue de la classe (quelques centaines de fiches au plus) est chargé en une requête et filtré sur l'appareil, sans tenir compte des accents : instantané et utilisable hors ligne.
 
 **Hors ligne** : le PDF est téléchargé via le client Supabase authentifié puis stocké dans le Cache Storage sous une clé stable (`/offline/sheets/{id}.pdf`) — les URL signées changeant à chaque fois, on ne s'appuie pas sur elles pour le cache. Les métadonnées (matières, chapitres, liste des fiches) sont aussi mises en cache pour la navigation hors ligne.
 

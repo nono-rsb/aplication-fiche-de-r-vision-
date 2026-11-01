@@ -3,6 +3,10 @@ import { CalendarClock, Flame, ListChecks, Sparkles } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { formatDate, greeting, parisToday } from '@/lib/dates'
 import { Card } from '@/components/ui/Card'
+import { Link } from 'react-router-dom'
+import { isNew, useCatalog, useFavorites } from '@/features/sheets/api'
+import { SheetListItem } from '@/features/sheets/SheetListItem'
+import { useOfflineIndex } from '@/lib/offline'
 
 const Section = ({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) => (
   <section className="space-y-2">
@@ -16,6 +20,10 @@ const Section = ({ icon, title, children }: { icon: ReactNode; title: string; ch
 
 export const HomePage = () => {
   const { profile } = useAuth()
+  const { catalog } = useCatalog()
+  const favorites = useFavorites()
+  const offline = useOfflineIndex()
+  const recent = catalog?.sheets.filter((s) => isNew(s, 14)).slice(0, 4) ?? []
   return (
     <div className="space-y-6 pb-6">
       <header className="pt-5">
@@ -46,7 +54,18 @@ export const HomePage = () => {
       </Section>
 
       <Section icon={<Sparkles className="size-4" />} title="Nouveautés">
-        <Card className="text-sm text-slate-500 dark:text-slate-400">Les dernières fiches publiées apparaîtront ici (étape 2).</Card>
+        {recent.length === 0 ? (
+          <Card className="text-sm text-slate-500 dark:text-slate-400">Pas de nouvelle fiche ces deux dernières semaines.</Card>
+        ) : (
+          <div className="space-y-2">
+            {recent.map((s) => (
+              <SheetListItem key={s.id} sheet={s} favorite={favorites.has(s.id)} offline={Boolean(offline[s.id])} />
+            ))}
+            <Link to="/fiches" className="block py-1 text-center text-sm font-semibold text-brand-600 dark:text-brand-300">
+              Toutes les fiches
+            </Link>
+          </div>
+        )}
       </Section>
     </div>
   )
